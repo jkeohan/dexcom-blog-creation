@@ -85,10 +85,10 @@ export const encodeGraphQLId = (type, id) => {
 };
 
 // Example usage
-const type = 'Asset';
-const id = '8d58a689-01d4-492c-a546-014cdb261834';
-const encodedId = encodeGraphQLId(type, id);
-console.log("encodeGraphQLId", encodedId);
+// const type = 'Asset';
+// const id = '8d58a689-01d4-492c-a546-014cdb261834';
+// const encodedId = encodeGraphQLId(type, id);
+// console.log("encodeGraphQLId", encodedId);
 
 
 // export const extractSrcImageFileNameWithImageType = (url) => {

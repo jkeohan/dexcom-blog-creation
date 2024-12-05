@@ -7,9 +7,10 @@ import {
 	buildCreateImageAssetQuery,
 	buildPublishImageAssetQuery,
 } from './services/queries.js';
-import { extractBlogData, extractImageData } from './utils/data_extractors.js';
+import { extractBlogData, extractImageData } from './utils/dataExtractors.js';
 import { decodeGraphQLId } from './utils/helpers.js'
 
+const delay = 1000
 const require = createRequire(import.meta.url);
 //  619 objects in the array, and 220 of them do not have an associated image
 // import blogData from './all_blog_posts.json' assert { type: 'json' } didn't work hence the need for require
@@ -20,7 +21,7 @@ const accessToken = await getAccessToken();
 const url =
 	'https://api.amplience.net/v2/content/content-repositories/6724d0603736886cda0324f2/content-items';
 
-const singleBlogData = blogData[4];
+const blogDataArr = blogData.slice(0,3)
 
 const createImage = async (image) => {
 	const { src, alt, name, filename, mimeType } = extractImageData(
@@ -46,8 +47,25 @@ const createBlog = async (blog) => {
 		image: {...imageData}
 	}
 	// console.log('blogDataJSON', blogDataJSON);
-	const blogData = formatBlogData(blogDataJSON);
-	const response = await createBlogAPI(blogData);
+	const blogDataObj = formatBlogData(blogDataJSON);
+	const response = await createBlogAPI(blogDataObj);
+	return response;
 };
 
-createBlog(singleBlogData);
+// createBlog(blogDataArr);
+
+const runQueue = async () => {
+	if (blogDataArr.length) {
+		const blog = blogDataArr.pop();
+		console.log('Processing blog:', blog)
+
+		const response = await createBlog(blog);
+		console.log('response', response);
+
+		setTimeout(() => {
+			runQueue();
+		}, delay);
+	}
+};
+
+runQueue();
