@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { CLIENT_ID, CLIENT_SECRET } from '../data/constants';
 
 export const getAccessToken = async function () {
 	try {
 		const { data } = await axios.post(
 			'https://auth.amplience.net/oauth/token',
 			{
-				client_id: '060ded7d-7529-4754-af8a-de8d0bade174',
-				client_secret:'59a4c240b4baec91622737d32961d453cf97c51166309617e8fec71309195ac5',
+				client_id: CLIENT_ID,
+				client_secret: CLIENT_SECRET,
 				grant_type: 'client_credentials',
 			},
 			{

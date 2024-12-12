@@ -20,7 +20,7 @@ export const createBlogAPI = async (blogData) => {
 			},
 		});
 
-		console.log('Content Item Created:', response.data);
+		// console.log('Content Item Created:', response.data);
 	} catch (error) {
 		console.error(
 			'Error Creating Content Item:',
@@ -42,12 +42,12 @@ export const createImageAPI = async (query) => {
 			},
 		}
 	);
-	console.log(gqlRequest.data.data);
+	// console.log(gqlRequest.data.data);
 	return gqlRequest.data.data.createAsset.id;
 };
 
 export const publishImageAssetAPI = async (query) => {
-    console.log('QUERY', query);
+    // console.log('QUERY', query);
     const QUERY = gql(query);
 
 	const gqlRequest = await axios.post(
@@ -61,6 +61,6 @@ export const publishImageAssetAPI = async (query) => {
 			},
 		}
 	);
-	console.log("gqlRequest.data.data", gqlRequest.data.data.publishAsset.publishJobId);
+	// console.log("gqlRequest.data.data", gqlRequest.data.data.publishAsset.publishJobId);
 	return gqlRequest.data
 }
