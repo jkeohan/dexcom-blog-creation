@@ -25,8 +25,9 @@ export const decodeGraphQLId = (encodedId) => {
 };
 
 // console.log("decodeGraphQLId",
-// 	decodeGraphQLId('QXNzZXQ6ZmFkYzAwMDMtMjliNi00N2UxLWE2ODEtMWM3ZGJmNmE0MDI4')
+// 	decodeGraphQLId('QXNzZXRSZXBvc2l0b3J5OjZiMjU0ZDMxLTE1MjEtNDlkYS04MDNmLTA3N2U4NTRmNDQ4MA==')
 // );
+// Output: da314341-0eec-4a33-824e-0f518fdebf36
 
 ////////////////////////////////////////////////////////////////////////////
 

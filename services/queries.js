@@ -1,13 +1,14 @@
-import { BLOG_LANDING_PAGE, SEARCH_INDEX, CATEGORY} from "../data/constants.js"
+import { BLOG_LANDING_PAGE, SEARCH_INDEX, CATEGORY, ENDPOINT} from "../data/constants.js"
 
-export const buildCreateImageAssetQuery = (name, src, fileName) => {
-	console.log('**** buildCreateAssetQuery ****', name, fileName, src);
+export const buildCreateImageAssetQuery = (src, name, fileName) => {
+	console.log('**** buildCreateImageAssetQuery ****', {src, name, fileName} );
 	let ql = `mutation {	
 				createAsset(
 					input: {
 						name: "${name}"
 						type: IMAGE
 						filename: "${fileName}"
+						label: "${fileName}"
 						src: "${src}"
 						assetRepositoryId: "QXNzZXRSZXBvc2l0b3J5OjA5NzQ1NDk4LWMxYTAtNGUyZS1iZDlkLTQ4MzA1ZmM1ZDZhYQ=="
 
@@ -41,7 +42,7 @@ export const buildCreateBlogQuery = ({ name, label, body, image, readingTime }) 
 			},
 			blogSearchable: true,
 			cardDisplay: 'image',
-			blogLanding: BLOG_LANDING_PAGE ,
+			blogLanding: BLOG_LANDING_PAGE,
 			category: CATEGORY,
 			image: {
 				diImage: {
@@ -64,13 +65,14 @@ export const buildCreateBlogQuery = ({ name, label, body, image, readingTime }) 
 						},
 						id: image.id,
 						name: image.name,
-						endpoint: 'jkeohandemo',
+						endpoint: ENDPOINT,
 						defaultHost: 'cdn.media.amplience.net',
 						mimeType: image.mimeType,
 					},
 				},
 				guide: 'Image Transformation Tool',
 				isStatic: false,
+				alt: image.alt,
 			},
 			schemaOrgType: 'Article',
 			searchIndex: SEARCH_INDEX,
@@ -86,7 +88,7 @@ export const buildCreateBlogQuery = ({ name, label, body, image, readingTime }) 
 									type: 'h2',
 									children: [
 										{
-											text: 'Test Article Heading 2',
+											text: name,
 											textStyle: 'h2',
 										},
 									],

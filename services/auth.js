@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { CLIENT_ID, CLIENT_SECRET } from '../data/constants';
+import { CLIENT_ID, CLIENT_SECRET } from '../data/constants.js';
+
+const CLIENT_ID = process.env.CLIENT_ID
+const CLIENT_SECRET = process.env.CLIENT_SECRET
 
 export const getAccessToken = async function () {
 	try {

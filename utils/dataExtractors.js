@@ -19,10 +19,38 @@ export const extractBlogData = ({ title: name, body_html: body }) => {
 	};
 	return data;
 };
+
 export const extractSrcImageDetails = (url) => {
 	const match = url.match(/\/articles\/([^?]+)/); // Extract the filename including extension
 	if (match) {
-		const filenameWithType = match[1]; // Full filename with extension
+		let filenameWithType = match[1]; // Full filename with extension
+
+		////////////////////////////////////////////////////////////////////////
+
+		// Remove numbers at the beginning of the filename and replace them with 'Stelo_imported_blog_'
+		// filenameWithType = filenameWithType.replace(
+		// 	/^\d+_/,
+		// 	'Stelo_imported_blog_'
+		// );
+		// Remove numbers or patterns at the beginning of the filename
+		filenameWithType = filenameWithType.replace(/^[\d-]+_?/, '');
+
+		// Remove specific patterns (1440x765, UUIDs, and timestamps)
+		filenameWithType = filenameWithType
+			.replace(/_\d+x\d+/g, '') // Remove resolution patterns like 1440x765
+			.replace(/x\d+/g, '') // Remove residual patterns like x765
+			.replace(/_[a-f0-9\-]{36}/g, '') // Remove UUIDs like "8e1825f-aa7e-496a-9674-ec9e90e0e742"
+			.replace(/_\d{14}-\d{4}/g, '') // Remove timestamps like "20231002135029-1023"
+			.replace(/__+/g, '_') // Replace multiple underscores with a single underscore
+			.replace(/_$/, ''); // Remove trailing underscore if present
+
+		// Prepend "Stelo_imported_blog_" to the filename
+		filenameWithType = `Stelo_imported_blog_${filenameWithType}`.replace(
+			/__+/g,
+			'_'
+		); // Ensure no double underscores after prepend
+		////////////////////////////////////////////////////////////////////////////////////////////////
+
 		const filenameWithoutType = filenameWithType.replace(/\.[^.]+$/, ''); // Remove extension
 		const extensionMatch = filenameWithType.match(/\.[^.]+$/); // Extract the extension
 		const mimeType = extensionMatch

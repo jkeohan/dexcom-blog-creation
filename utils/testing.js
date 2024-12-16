@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-import { getAccessToken } from '../services/auth.js';
+import  {extractSrcImageDetails } from './dataExtractors.js'
 const blogData = require('../data/all_blog_posts.json');
 console.log("*** blogData.length ****", blogData.length);
 
@@ -29,17 +29,7 @@ console.log(
 	)
 );
 // output: Ozempic-Side-Effects-GLP-1-Side-Effects-Wegovy-Side-Effects-Weight-Loss-Drugs-One-Drop.jpg
-////////////////////////////////////////////////////////////////
-
-// Not being used
-export const encodeGraphQLId = (type, id) => {
-	const encodedString = Buffer.from(`${type}:${id}`, 'utf-8').toString(
-		'base64'
-	);
-	return encodedString;
-};
-
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 
 // This will replace existing Unicode characters with their corresponding HTML opening/closing tags
 function replaceUnicodeWithTags(input) {
@@ -56,3 +46,20 @@ const data = {
 const result = replaceUnicodeWithTags(data);
 // console.log('results', result);
 ////////////////////////////////////////////////////////////////////////
+
+
+const imageNames = blogData.filter((blogData) => blogData.image !== undefined
+	).map(blog => extractSrcImageDetails(blog.image.src)).map(image => image.name)
+console.dir(imageNames, {maxArrayLength: null});
+
+// const imageNames = blogData
+// 	.filter((blogData) => blogData.image !== undefined)
+// 	.map((blog) => blog.image.src)
+// console.dir(imageNames, { maxArrayLength: null });
+
+// 0823_GLP-1-Side-Effects_1440x765_a8e1825f-aa7e-496a-9674-ec9e90e0e742.png?v=1690823989';
+// remove numbers from beginging of file
+// 0823_GLP-1-Side-Effects_1440x765_a8e1825f-aa7e-496a-9674-ec9e90e0e742.png?v=1690823989';
+// remove 1440x765 anywhere in the file
+// remove this pattern of numbers and dashes: 8e1825f-aa7e-496a-9674-ec9e90e0e742
+// prepend Stelo_imported_blog_ to the begining of each file

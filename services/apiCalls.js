@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 import { getAccessToken } from './auth.js';
 
 const accessToken = await getAccessToken();
+// console.log('accessToken', accessToken);
 
 const contentManagementUrl =
 	'https://api.amplience.net/v2/content/content-repositories/6724d0603736886cda0324f2/content-items';
@@ -12,6 +13,7 @@ const contentManagementUrl =
 const assetManagementGraphQLUrl = 'https://api.amplience.net/graphql';
 
 export const createBlogAPI = async (blogData) => {
+	console.log('blogData', blogData);
 	try {
 		const response = await axios.post(contentManagementUrl, blogData, {
 			headers: {
@@ -20,7 +22,7 @@ export const createBlogAPI = async (blogData) => {
 			},
 		});
 
-		// console.log('Content Item Created:', response.data);
+		console.log('Content Item Created:', response.data);
 	} catch (error) {
 		console.error(
 			'Error Creating Content Item:',
@@ -42,7 +44,7 @@ export const createImageAPI = async (query) => {
 			},
 		}
 	);
-	// console.log(gqlRequest.data.data);
+	console.log(gqlRequest.data.data);
 	return gqlRequest.data.data.createAsset.id;
 };
 
