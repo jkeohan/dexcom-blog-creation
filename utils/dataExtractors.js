@@ -25,13 +25,6 @@ export const extractSrcImageDetails = (url) => {
 	if (match) {
 		let filenameWithType = match[1]; // Full filename with extension
 
-		////////////////////////////////////////////////////////////////////////
-
-		// Remove numbers at the beginning of the filename and replace them with 'Stelo_imported_blog_'
-		// filenameWithType = filenameWithType.replace(
-		// 	/^\d+_/,
-		// 	'Stelo_imported_blog_'
-		// );
 		// Remove numbers or patterns at the beginning of the filename
 		filenameWithType = filenameWithType.replace(/^[\d-]+_?/, '');
 
@@ -49,7 +42,6 @@ export const extractSrcImageDetails = (url) => {
 			/__+/g,
 			'_'
 		); // Ensure no double underscores after prepend
-		////////////////////////////////////////////////////////////////////////////////////////////////
 
 		const filenameWithoutType = filenameWithType.replace(/\.[^.]+$/, ''); // Remove extension
 		const extensionMatch = filenameWithType.match(/\.[^.]+$/); // Extract the extension
@@ -79,10 +71,6 @@ export const extractImageData = ({ src, alt }) => {
 		name,
 		filename,
 		mimeType
-        // alt: sanitizeInput(alt),
-        // fileName: extractSrcImageFileNameWithImageType((src)),
-		// name: sanitizeInput(alt),
-		// fileName: extractSrcImageFilename((src)),
 	};
 	return data;
 };

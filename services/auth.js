@@ -1,16 +1,19 @@
 import axios from 'axios';
-import { CLIENT_ID, CLIENT_SECRET } from '../data/constants.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const CLIENT_ID = process.env.CLIENT_ID
-const CLIENT_SECRET = process.env.CLIENT_SECRET
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+
+console.log('client', CLIENT_ID);
 
 export const getAccessToken = async function () {
 	try {
 		const { data } = await axios.post(
 			'https://auth.amplience.net/oauth/token',
 			{
-				client_id: CLIENT_ID,
-				client_secret: CLIENT_SECRET,
+				client_id: `${CLIENT_ID}`,
+				client_secret: `${CLIENT_SECRET}`,
 				grant_type: 'client_credentials',
 			},
 			{
@@ -19,11 +22,8 @@ export const getAccessToken = async function () {
 				},
 			}
 		);
-
-        // console.log('token', data.access_token);
 		return data.access_token;
-
 	} catch (error) {
-		console.error("error", error);
+		console.error('error', error);
 	}
 };

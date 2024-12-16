@@ -1,9 +1,8 @@
-export const CLIENT_ID = '060ded7d-7529-4754-af8a-de8d0bade174';
-
+export const ENDPOINT = 'jkeohandemo';
 export const BLOG_LANDING_PAGE = {
 	// Dexcom ID - Authorization required error when using this id in my test hub
-	id: "3c09a146-a14a-4988-bbc3-a2413df467d5",
-	// My Hub 
+	id: '3c09a146-a14a-4988-bbc3-a2413df467d5',
+	// My Hub
 	// id: "3bcf5cbc-3224-4988-a882-80379000ce33",
 	contentType: 'https://dexcom.com/content/blog-landing',
 	_meta: {
@@ -30,4 +29,3 @@ export const IMAGE_DATA = {
 export const READING_TIME = 0;
 export const SEARCH_INDEX =
 	'Frontierprod.production-blog_sort-publishdate-desc';
-export const ENDPOINT = 'jkeohandemo';
