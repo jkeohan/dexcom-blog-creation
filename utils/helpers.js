@@ -1,66 +1,33 @@
-// Removes spaces before/after dashes from the image's alt value
-export const sanitizeAltText = (input) => {
-	return (
-		input
-			.replace(/\s*-\s*/g, '-') // Remove spaces around dashes
-			// .replace(/-+(\s*-+)*-+/g, '-') // Replace multiple consecutive dashes with a single dash
-			.replace(/-jpg$/, '.png') // Replace trailing dash before 'jpg' with a dot
-			.replace(/\s+/g, '-')
-	); // Replace any remaining spaces with a single dash
-	// .replace(/^-|-$/g, ''); // Trim leading and trailing dashes if present
-};
-
-// Example usage
-// console.log(sanitizeAltText(
-// 	'Ozempic Side Effects - GLP-1 Side Effects - Wegovy Side Effects - Weight Loss Drugs - One Drop.jpg'
-// ));
-// Output: Ozempic-Side-Effects-GLP-1-Side-Effects-Wegovy-Side-Effects-Weight-Loss-Drugs-One-Drop.jpg
-
-
-// Decodes base64 GraphQL ID to utf-8 DAM id 
-// Used in index > createImage
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 export const decodeGraphQLId = (encodedId) => {
+	/**
+	 * Decodes a GraphQL ID from a Base64-encoded string.
+	 *
+	 * @param {string} encodedId - The Base64-encoded ID string.
+	 * @returns {string} The decoded string in UTF-8 format.
+	 */
+
 	const decodedString = Buffer.from(encodedId, 'base64').toString('utf-8');
 	return decodedString.split(':')[1];
 };
 
-// console.log("decodeGraphQLId",
-// 	decodeGraphQLId('QXNzZXRSZXBvc2l0b3J5OjZiMjU0ZDMxLTE1MjEtNDlkYS04MDNmLTA3N2U4NTRmNDQ4MA==')
-// );
-// Output: da314341-0eec-4a33-824e-0f518fdebf36
+// Function to write to the log file
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const logFilePath = path.join(__dirname, 'logs.txt');
 
-////////////////////////////////////////////////////////////////////////////
+export const writeLog = (message) => {
+	const timestamp = new Date().toISOString(); // Get current timestamp
+	const logMessage = `[${timestamp}] ${message}\n`; // Format the log message
 
-// Extracts the image file name and extension from url
-// Used in dataExtractors
-export const extractSrcImageFileNameWithImageType = (url) => {
-	const match = url.match(/\/articles\/([^?]+)/);
-	return match ? match[1] : 'default.png'; // Fallback to 'default.png' if not found
+	// Append the log message to the file
+	fs.appendFile(logFilePath, logMessage, (err) => {
+		if (err) {
+			console.error('Error writing to log file:', err);
+		} else {
+			console.log('Log written successfully.');
+		}
+	});
 };
-
-// console.log(
-// 	extractSrcImageFileNameWithImageType(
-// 		'https://cdn.shopify.com/s/files/1/1488/7742/articles/blog-feature_people-ops-women-leadership_1440x765_May22.jpg?v=1652372995'
-// 	)
-// );
-// Output: blog-feature_people-ops-women-leadership_1440x765_May22.jpg
-
-////////////////////////////////////////////////////////////////////////////
-// Extracts the image file name without image extension from url
-// Not being used 
-const extractSrcImageFilenameWithoutImageType = (url) => {
-	const match = url.match(/\/articles\/([^?]+)/); // Extract the filename including extension
-	if (match) {
-		const filename = match[1];
-		// Remove the file extension by splitting at the last dot
-		return filename.replace(/\.[^.]+$/, ''); // Removes the last dot and everything after it
-	}
-	return 'default'; // Fallback to 'default' if not found
-};
-
-// console.log(
-// 	extractSrcImageFilenameWithoutImageType(
-// 		'https://cdn.shopify.com/s/files/1/1488/7742/articles/blog-feature_people-ops-women-leadership_1440x765_May22.jpg?v=1652372995'
-// 	)
-// );
-// Output: blog-feature_people-ops-women-leadership_1440x765_May22

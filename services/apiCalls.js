@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { print } from 'graphql';
 import gql from 'graphql-tag';
-
 import { getAccessToken } from './auth.js';
+import { writeLog } from '../utils/helpers.js';
 
 const accessToken = await getAccessToken();
-// console.log('accessToken', accessToken);
+console.log('access token', accessToken);
 
 const contentManagementUrl =
 	'https://api.amplience.net/v2/content/content-repositories/6724d0603736886cda0324f2/content-items';
@@ -13,7 +13,11 @@ const contentManagementUrl =
 const assetManagementGraphQLUrl = 'https://api.amplience.net/graphql';
 
 export const createBlogAPI = async (blogData) => {
-	console.log('blogData', blogData);
+	const blogMetaData = JSON.stringify(
+		blogData?.body?._meta || 'No blog data',
+		null,
+		2
+	);
 	try {
 		const response = await axios.post(contentManagementUrl, blogData, {
 			headers: {
@@ -21,9 +25,18 @@ export const createBlogAPI = async (blogData) => {
 				'Content-Type': 'application/json',
 			},
 		});
-
+		writeLog(`Created: \n${blogMetaData}`);
 		console.log('Content Item Created:', response.data);
 	} catch (error) {
+		const errorData = JSON.stringify(
+			error.response?.data || error.message,
+			null,
+			2
+		);
+		writeLog(
+			`An error occurred:\nError: ${errorData}\nBlogData: ${blogMetaData}`
+		);
+
 		console.error(
 			'Error Creating Content Item:',
 			error.response?.data || error.message
@@ -34,7 +47,7 @@ export const createBlogAPI = async (blogData) => {
 export const createImageAPI = async (query) => {
 	const QUERY = gql(query);
 	const gqlRequest = await axios.post(
-        assetManagementGraphQLUrl,
+		assetManagementGraphQLUrl,
 		{
 			query: print(QUERY),
 		},
@@ -49,8 +62,8 @@ export const createImageAPI = async (query) => {
 };
 
 export const publishImageAssetAPI = async (query) => {
-    // console.log('QUERY', query);
-    const QUERY = gql(query);
+	// console.log('QUERY', query);
+	const QUERY = gql(query);
 
 	const gqlRequest = await axios.post(
 		assetManagementGraphQLUrl,
@@ -64,5 +77,5 @@ export const publishImageAssetAPI = async (query) => {
 		}
 	);
 	// console.log("gqlRequest.data.data", gqlRequest.data.data.publishAsset.publishJobId);
-	return gqlRequest.data
-}
+	return gqlRequest.data;
+};
