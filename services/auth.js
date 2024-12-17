@@ -5,8 +5,6 @@ dotenv.config();
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
-console.log('client', CLIENT_ID);
-
 export const getAccessToken = async function () {
 	try {
 		const { data } = await axios.post(

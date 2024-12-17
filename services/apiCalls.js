@@ -3,12 +3,12 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import { getAccessToken } from './auth.js';
 import { writeLog } from '../utils/helpers.js';
+import { CONTENT_MANAGEMENT_REPO_ID } from '../data/constants.js'
 
 const accessToken = await getAccessToken();
-console.log('access token', accessToken);
 
 const contentManagementUrl =
-	'https://api.amplience.net/v2/content/content-repositories/6724d0603736886cda0324f2/content-items';
+	`https://api.amplience.net/v2/content/content-repositories/${CONTENT_MANAGEMENT_REPO_ID}/content-items`;
 
 const assetManagementGraphQLUrl = 'https://api.amplience.net/graphql';
 
@@ -25,8 +25,7 @@ export const createBlogAPI = async (blogData) => {
 				'Content-Type': 'application/json',
 			},
 		});
-		writeLog(`Created: \n${blogMetaData}`);
-		console.log('Content Item Created:', response.data);
+		writeLog(`createBlogAPI: created \n${blogMetaData}`);
 	} catch (error) {
 		const errorData = JSON.stringify(
 			error.response?.data || error.message,
@@ -34,7 +33,7 @@ export const createBlogAPI = async (blogData) => {
 			2
 		);
 		writeLog(
-			`An error occurred:\nError: ${errorData}\nBlogData: ${blogMetaData}`
+			`createBlogAPI: An error occurred:\nError: ${errorData}\nBlogData: ${blogMetaData}`
 		);
 
 		console.error(
@@ -57,8 +56,18 @@ export const createImageAPI = async (query) => {
 			},
 		}
 	);
-	console.log(gqlRequest.data.data);
-	return gqlRequest.data.data.createAsset.id;
+
+	if (
+		gqlRequest.data &&
+		gqlRequest.data.data &&
+		gqlRequest.data.data.createAsset &&
+		gqlRequest.data.data.createAsset.id
+	) {
+		writeLog(`Image created:\nquery: ${query}`);
+		return gqlRequest.data.data.createAsset.id;
+	} else {
+		writeLog(`createImageAPI: An error occurred:\nquery: ${query}`);
+	}
 };
 
 export const publishImageAssetAPI = async (query) => {

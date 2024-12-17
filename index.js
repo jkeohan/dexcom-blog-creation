@@ -18,23 +18,15 @@ const delay = 1000;
 const require = createRequire(import.meta.url);
 const blogData = require('./data/all_blog_posts.json');
 
-// First blog
-const blogDataArr = blogData.slice(0,1)
-
-// First 3 with images
-// const blogDataArr = blogData.slice(0,3)
-
-// Last blog with no image 
-// const blogDataArr = blogData[blogData.length - 2]
-
-// Last 3 with no images
-// const blogDataArr = blogData.slice(blogData.length - 5, blogData.length - 2)
+const blogDataArr = blogData.slice(0,2)
+console.log('blogDataArr', blogDataArr)
 
 const createImage = async (image) => {
-	if(image === undefined) return IMAGE_DATA
-	// console.log("*** image ***", image)
+	if (image === undefined || (image.src && image.src.includes('.webp'))) {
+		return IMAGE_DATA;
+	}
 	const { src, alt, name, filename, mimeType } = extractImageData(image);
-	// console.log('*** image data extracted ***', { src, alt, name, filename, mimeType });
+
 	const assetQuery = buildCreateImageAssetQuery(src, name, filename);
 	const id = await createImageAPI(assetQuery);
 	const buildPublishQuery = buildPublishImageAssetQuery(id);
@@ -43,12 +35,12 @@ const createImage = async (image) => {
 		id: decodeGraphQLId(id),
 		name,
 		mimeType,
-		alt
+		alt,
 	};
 };
 
 const createBlog = async (blog) => {
-	const imageData = await createImage(blog.image)
+	const imageData = await createImage(blog.image);
 
 	let blogDataJSON = extractBlogData(blog);
 	blogDataJSON = {
@@ -67,7 +59,10 @@ const runQueue = async () => {
 		setTimeout(() => {
 			runQueue();
 		}, delay);
+	} else {
+		console.timeEnd('Create Blogs');
 	}
 };
 
+console.time('Create Blogs');
 runQueue();

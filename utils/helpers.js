@@ -13,16 +13,14 @@ export const decodeGraphQLId = (encodedId) => {
 	return decodedString.split(':')[1];
 };
 
-// Function to write to the log file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const logFilePath = path.join(__dirname, 'logs.txt');
 
 export const writeLog = (message) => {
-	const timestamp = new Date().toISOString(); // Get current timestamp
-	const logMessage = `[${timestamp}] ${message}\n`; // Format the log message
+	const timestamp = new Date().toISOString(); 
+	const logMessage = `[${timestamp}] ${message}\n`; 
 
-	// Append the log message to the file
 	fs.appendFile(logFilePath, logMessage, (err) => {
 		if (err) {
 			console.error('Error writing to log file:', err);

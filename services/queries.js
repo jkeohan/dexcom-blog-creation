@@ -1,7 +1,13 @@
-import { BLOG_LANDING_PAGE, SEARCH_INDEX, CATEGORY, ENDPOINT} from "../data/constants.js"
+import {
+	BLOG_LANDING_PAGE,
+	SEARCH_INDEX,
+	CATEGORY,
+	ENDPOINT,
+	ASSET_REPOSITORY_ID,
+	ASSET_FOLDER_ID,
+} from '../data/constants.js';
 
 export const buildCreateImageAssetQuery = (src, name, fileName) => {
-	console.log('**** buildCreateImageAssetQuery ****', {src, name, fileName} );
 	let ql = `mutation {	
 				createAsset(
 					input: {
@@ -10,8 +16,8 @@ export const buildCreateImageAssetQuery = (src, name, fileName) => {
 						filename: "${fileName}"
 						label: "${fileName}"
 						src: "${src}"
-						assetRepositoryId: "QXNzZXRSZXBvc2l0b3J5OjA5NzQ1NDk4LWMxYTAtNGUyZS1iZDlkLTQ4MzA1ZmM1ZDZhYQ=="
-
+						assetRepositoryId: "${ASSET_REPOSITORY_ID}"
+						assetFolderId: "${ASSET_FOLDER_ID}"
 					}
 				) {
            			 id
@@ -31,9 +37,16 @@ export const buildPublishImageAssetQuery = (assetId) => {
       				}
 		}`;
 	return ql;
-}
+};
 
-export const buildCreateBlogQuery = ({ name, label, body, image, readingTime }) => {
+export const buildCreateBlogQuery = ({
+	name,
+	label,
+	body,
+	image,
+	readingTime,
+}) => {
+	console.log("name,label", name, label, body)
 	return {
 		body: {
 			_meta: {
