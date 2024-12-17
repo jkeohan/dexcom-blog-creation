@@ -16,10 +16,7 @@ import { IMAGE_DATA } from './data/constants.js';
 
 const delay = 1000;
 const require = createRequire(import.meta.url);
-const blogData = require('./data/all_blog_posts.json');
-
-const blogDataArr = blogData.slice(0,2)
-console.log('blogDataArr', blogDataArr)
+const blogDataArr = require('./data/all_blog_posts.json');
 
 const createImage = async (image) => {
 	if (image === undefined || (image.src && image.src.includes('.webp'))) {

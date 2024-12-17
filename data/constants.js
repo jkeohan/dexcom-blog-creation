@@ -1,4 +1,19 @@
+// UPDATE CLIENT_ID AND CLIENT_SECRET
+export const CLIENT_ID = '';
+export const CLIENT_SECRET = '';
+
+// USED FOR CREATING BLOG CONTENT ITEM
+// Replace with your Content Hub name (Settings > Properties)
 export const ENDPOINT = 'jkeohandemo';
+// Replace with your Content Repo Folder ID.  Used with the Content Management REST API
+export const CONTENT_MANAGEMENT_REPO_ID = '6724d0603736886cda0324f2';
+
+// USED FOR CREATING IMAGE ASSETS
+// Replace with your DAM AssetRepository and AssetFolder IDs.  Used when creating image assets
+export const ASSET_REPOSITORY_ID =
+	'QXNzZXRSZXBvc2l0b3J5OjA5NzQ1NDk4LWMxYTAtNGUyZS1iZDlkLTQ4MzA1ZmM1ZDZhYQ==';
+export const ASSET_FOLDER_ID =
+	'QXNzZXRGb2xkZXI6NTJiOTYzODUtOGY0OS00OGJiLWFiOGYtZjRjYzYzOGRiMjI3';
 export const BLOG_LANDING_PAGE = {
 	id: '3c09a146-a14a-4988-bbc3-a2413df467d5',
 	contentType: 'https://dexcom.com/content/blog-landing',
@@ -8,10 +23,7 @@ export const BLOG_LANDING_PAGE = {
 	},
 };
 export const CATEGORY = {
-	// Dexcom ID - Authorization required error when using this id in my test hub
-	// id: 'e418d6e1-f72b-45ab-a2f7-31891413370e',
-	// My Hub id
-	id: '3bcf5cbc-3224-4988-a882-80379000ce33',
+	id: 'e418d6e1-f72b-45ab-a2f7-31891413370e',
 	contentType: 'https://dexcom.com/hierarchy/blog-category',
 	_meta: {
 		schema: 'http://bigcontent.io/cms/schema/v1/core#/definitions/content-link',
@@ -26,7 +38,3 @@ export const IMAGE_DATA = {
 export const READING_TIME = 0;
 export const SEARCH_INDEX =
 	'Frontierprod.production-blog_sort-publishdate-desc';
-export const CONTENT_MANAGEMENT_REPO_ID = '6724d0603736886cda0324f2'
-export const ASSET_REPOSITORY_ID =
-	'QXNzZXRSZXBvc2l0b3J5OjA5NzQ1NDk4LWMxYTAtNGUyZS1iZDlkLTQ4MzA1ZmM1ZDZhYQ==';
-export const ASSET_FOLDER_ID = 'QXNzZXRGb2xkZXI6NTJiOTYzODUtOGY0OS00OGJiLWFiOGYtZjRjYzYzOGRiMjI3';

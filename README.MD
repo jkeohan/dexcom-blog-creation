@@ -10,13 +10,20 @@ This app will do the following:
 4. Using the Content Management REST API it creates the blog with all required fields, including the above image and place in Content folder of destination hub
 5. Log file captures all image/blog creation and errors
 
+## Instructions
+
+1. Download or clone this repo
+2. Install dependencies 
+3. Update Constants
+4. Run index.js
+
 ## Requirements
 
 1. Update auth.js with the appropriate CLIENT_ID and CLIENT_SECRET keys.
 2. Update IMAGE_DATA in constants.js with the appropriate image to reference from the your DAM.
 3. In constants.js update the following constants:
+   - CLIENT_ID and CLIENT_SECRET
+   - CONTENT_MANAGEMENT_REPO_ID (Content Hub: Content Repo Folder ID)
    - ENDPOINT (DAM ID)
-   - CONTENT_MANAGEMENT_REPO_ID 
-   - ASSET_REPOSITORY_ID
-   - ASSET_FOLDER_ID
-   - CATEGORY ID
+   - ASSET_REPOSITORY_ID (DAM: Specific Asset Repo ID)
+   - ASSET_FOLDER_ID (DAM: Specific Child Folder ID)
