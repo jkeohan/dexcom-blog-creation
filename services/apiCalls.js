@@ -3,12 +3,12 @@ import { print } from 'graphql';
 import gql from 'graphql-tag';
 import { getAccessToken } from './auth.js';
 import { writeLog } from '../utils/helpers.js';
-import { CONTENT_MANAGEMENT_REPO_ID } from '../data/constants.js'
+import { DC_REPO_ID } from '../data/constants.js';
 
 const accessToken = await getAccessToken();
 
-const contentManagementUrl =
-	`https://api.amplience.net/v2/content/content-repositories/${CONTENT_MANAGEMENT_REPO_ID}/content-items`;
+const contentManagementUrl = `https://api.amplience.net/v2/content/content-repositories/${DC_REPO_ID}/content-items`;
+const patchContentManagementUrl = `https://api.amplience.net/v2/content/content-items/`;
 
 const assetManagementGraphQLUrl = 'https://api.amplience.net/graphql';
 
@@ -26,6 +26,7 @@ export const createBlogAPI = async (blogData) => {
 			},
 		});
 		writeLog(`createBlogAPI: created \n${blogMetaData}`);
+		return response.data
 	} catch (error) {
 		const errorData = JSON.stringify(
 			error.response?.data || error.message,

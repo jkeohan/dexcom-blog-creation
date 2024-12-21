@@ -13,7 +13,7 @@ This app will do the following:
 ## Instructions
 
 1. Download or clone this repo
-2. Install dependencies 
+2. Install dependencies
 3. Update Constants
 4. Run index.js
 
@@ -23,7 +23,7 @@ This app will do the following:
 2. Update IMAGE_DATA in constants.js with the appropriate image to reference from the your DAM.
 3. In constants.js update the following constants:
    - CLIENT_ID and CLIENT_SECRET
-   - CONTENT_MANAGEMENT_REPO_ID (Content Hub: Content Repo Folder ID)
+   - DC_REPO_ID (Content Hub: Content Repo Folder ID)
    - ENDPOINT (DAM ID)
    - ASSET_REPOSITORY_ID (DAM: Specific Asset Repo ID)
    - ASSET_FOLDER_ID (DAM: Specific Child Folder ID)

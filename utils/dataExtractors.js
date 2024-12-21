@@ -44,7 +44,7 @@ export const extractSrcImageDetails = (url) => {
 		const filenameWithoutType = filenameWithType
 			.replace(/\.[^.]+$/, '') // Remove extension
 			.replace(/\./g, ''); // Remove any dots in the filenameWithoutType
-			
+
 		const extensionMatch = filenameWithType.match(/\.[^.]+$/); // Extract the extension
 		const mimeType = extensionMatch
 			? `image/${extensionMatch[0].slice(1)}`

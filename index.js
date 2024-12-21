@@ -10,16 +10,20 @@ import {
 	buildPublishImageAssetQuery,
 	buildCreateBlogQuery,
 } from './services/queries.js';
+import { formatToFourDigits } from './utils/helpers.js';
 import { extractBlogData, extractImageData } from './utils/dataExtractors.js';
 import { decodeGraphQLId } from './utils/helpers.js';
-import { IMAGE_DATA } from './data/constants.js';
+import { IMAGE_DATA } from './data/joe_constants.js';
 
-const delay = 1000;
+const delay = 750;
 const require = createRequire(import.meta.url);
-const blogDataArr = require('./data/all_blog_posts.json');
+const blogData = require('./data/all_blog_posts.json');
+
+const blogDataArr = blogData.slice(2,4);
+const blogDataArrLength = blogDataArr.length;
 
 const createImage = async (image) => {
-	if (image === undefined || (image.src && image.src.includes('.webp'))) {
+	if (image === undefined) {
 		return IMAGE_DATA;
 	}
 	const { src, alt, name, filename, mimeType } = extractImageData(image);
@@ -36,22 +40,32 @@ const createImage = async (image) => {
 	};
 };
 
-const createBlog = async (blog) => {
+const createBlog = async (blog, indexPos) => {
 	const imageData = await createImage(blog.image);
-
+	// console.log("createBlog - indexPos: " + indexPos)
 	let blogDataJSON = extractBlogData(blog);
 	blogDataJSON = {
 		...blogDataJSON,
 		image: { ...imageData },
+		indexPos,
 	};
+
 	const blogDataObj = buildCreateBlogQuery(blogDataJSON);
-	const response = await createBlogAPI(blogDataObj);
+	// console.log('blogDataObj', blogDataObj);
+	// console.dir(blogDataObj, {
+	// 	maxArrayLength: null,
+	// });
+	await createBlogAPI(blogDataObj);
 };
 
 const runQueue = async () => {
 	if (blogDataArr.length) {
+		const indexPos = formatToFourDigits(
+			Math.abs(blogDataArr.length - blogDataArrLength)
+		);
+
 		const blog = blogDataArr.pop();
-		const response = await createBlog(blog);
+		await createBlog(blog, indexPos);
 
 		setTimeout(() => {
 			runQueue();

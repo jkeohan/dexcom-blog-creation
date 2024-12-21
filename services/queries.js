@@ -5,7 +5,9 @@ import {
 	ENDPOINT,
 	ASSET_REPOSITORY_ID,
 	ASSET_FOLDER_ID,
+	DC_FOLDER_ID,
 } from '../data/constants.js';
+import { splitParagraphsIntoTextBlocks } from '../utils/helpers.js';
 
 export const buildCreateImageAssetQuery = (src, name, fileName) => {
 	let ql = `mutation {	
@@ -45,14 +47,21 @@ export const buildCreateBlogQuery = ({
 	body,
 	image,
 	readingTime,
+	indexPos,
 }) => {
-	console.log("name,label", name, label, body)
+	const section_body = splitParagraphsIntoTextBlocks(body);
+	console.log('section_body', section_body);
+	// console.dir(JSON.stringify(section_body), {
+	// 	maxArrayLength: null,
+	// });
 	return {
 		body: {
 			_meta: {
 				name,
 				schema: 'https://dexcom.com/content/blog-article',
+				// deliveryKey: `en-us/blog/import-${indexPos}`,
 			},
+			blogTitle: name,
 			blogSearchable: true,
 			cardDisplay: 'image',
 			blogLanding: BLOG_LANDING_PAGE,
@@ -87,7 +96,16 @@ export const buildCreateBlogQuery = ({
 				isStatic: false,
 				alt: image.alt,
 			},
-			schemaOrgType: 'Article',
+			schemaOrgType: 'BlogPage',
+			seo: {
+				indexseo: false,
+				followseo: false,
+				redirectHome: false,
+				redirectType: '301',
+				title: name,
+				description: name,
+			},
+			schemaOrgType: 'BlogPage',
 			searchIndex: SEARCH_INDEX,
 			searchType: 'Blog',
 			searchable: false,
@@ -107,24 +125,25 @@ export const buildCreateBlogQuery = ({
 									],
 								},
 							],
-							body: [
-								{
-									type: 'paragraph',
-									children: [
-										{
-											text: body,
-											textStyle: 'b1',
-										},
-									],
-								},
-							],
+							body: section_body
+							// body: [
+							// 	{
+							// 		type: 'paragraph',
+							// 		children: [
+							// 			{
+							// 				text: body,
+							// 				textStyle: 'b1',
+							// 			},
+							// 		],
+							// 	},
+							// ],
 						},
 					},
 				},
 			],
 		},
 		label,
-		folderId: null,
+		folderId: DC_FOLDER_ID,
 		locale: 'en-US',
 	};
 };
