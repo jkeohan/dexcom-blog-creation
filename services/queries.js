@@ -7,7 +7,6 @@ import {
 	ASSET_FOLDER_ID,
 	DC_FOLDER_ID,
 } from '../data/constants.js';
-import { splitParagraphsIntoTextBlocks } from '../utils/helpers.js';
 
 export const buildCreateImageAssetQuery = (src, name, fileName) => {
 	let ql = `mutation {	
@@ -49,16 +48,11 @@ export const buildCreateBlogQuery = ({
 	readingTime,
 	indexPos,
 }) => {
-	const section_body = splitParagraphsIntoTextBlocks(body);
-	console.log('section_body', section_body);
-	// console.dir(JSON.stringify(section_body), {
-	// 	maxArrayLength: null,
-	// });
 	return {
 		body: {
 			_meta: {
 				name,
-				schema: 'https://dexcom.com/content/blog-article',
+				schema: 'https://dexcom.com/content/blog-article'
 				// deliveryKey: `en-us/blog/import-${indexPos}`,
 			},
 			blogTitle: name,
@@ -125,7 +119,7 @@ export const buildCreateBlogQuery = ({
 									],
 								},
 							],
-							body: section_body
+							body
 							// body: [
 							// 	{
 							// 		type: 'paragraph',

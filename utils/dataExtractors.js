@@ -1,4 +1,6 @@
 import { READING_TIME } from '../data/constants.js';
+// import { convertHTMLToTextBlocks } from '../utils/helpers.js';
+import { convertHTMLToTextBlocks } from '../utils/parseHTMLbyTag.js';
 
 export const extractReadingTime = (text) => {
 	const regex = /Read time: (\d+) minutes/; // Regular expression with a capturing group
@@ -11,11 +13,13 @@ export const extractReadingTime = (text) => {
 };
 
 export const extractBlogData = ({ title: name, body_html: body }) => {
+	const convertedHTMLIntoTextBlocks = convertHTMLToTextBlocks(body);
+	const extractedReadingTime = extractReadingTime(body);
 	const data = {
 		name,
 		label: name,
-		body,
-		readingTime: extractReadingTime(body),
+		body: convertedHTMLIntoTextBlocks,
+		readingTime: extractedReadingTime,
 	};
 	return data;
 };
