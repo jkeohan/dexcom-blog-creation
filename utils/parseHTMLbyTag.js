@@ -1,11 +1,8 @@
 import fs from 'fs';
 import { JSDOM } from 'jsdom';
-// const filePath = '../data/all_blog_posts.json'; // Adjust path if needed
+import { writeLog } from './helpers.js';
 const filePath = '../data/testing.json'; // Adjust path if needed
-// const jsonData = JSON.parse(fs.readFileSync(filePath, 'utf8')).slice(7,8)
 
-// console.log('jsonData', jsonData);
-const regexCommaOrPeriod = /^[.,]\s*(.*)/
 const processChildrenWithSpaces = (node) => {
 	const emptyNode = {
 		text: ' ',
@@ -23,6 +20,7 @@ const processChildrenWithSpaces = (node) => {
 				const isPunctuation =
 					nextSibling &&
 					nextSibling.nodeType === 3 &&
+					// regex for commaOrPeriod
 					/^[.,]\s*(.*)/.test(nextSibling.nodeValue);
 
 				// Add space before the anchor tag (if it's not the first element)
@@ -36,42 +34,23 @@ const processChildrenWithSpaces = (node) => {
 				return result;
 			}
 
-			// Add space around elements containing anchor tags (such as <p>, <ul>, etc.)
-			// if (processedNode && processedNode.children) {
-			// 	processedNode.children = processedNode.children
-			// 		.map((child) =>
-			// 			child.type === 'link' ? [emptyNode, child, emptyNode] : child
-			// 		)
-			// 		.flat();
-			// }
-
 			return processedNode; // Return the node as-is
 		})
 		.flat() // Flatten the array to avoid nested arrays
 		.filter(Boolean); // Remove any null/undefined values
 };
 
-
 const TAGS = {
 	P: (node) => ({
 		type: 'paragraph',
 		children: processChildrenWithSpaces(node),
 	}),
-	H2: (node) => ({
+	H: (node, tagName) => ({
 		type: 'paragraph',
 		children: [
 			{
 				text: node.textContent.trim(),
-				textStyle: 'h2',
-			},
-		],
-	}),
-	H3: (node) => ({
-		type: 'paragraph',
-		children: [
-			{
-				text: node.textContent.trim(),
-				textStyle: 'h3',
+				textStyle: `${tagName}`,
 			},
 		],
 	}),
@@ -85,11 +64,21 @@ const TAGS = {
 		textStyle: 'b1',
 		bold: true,
 	}),
-	B: (node) => ({
-		text: node.textContent,
-		textStyle: 'b1',
-		bold: true,
-	}),
+	B: (node) => {
+		if (node.childNodes) {
+			const text = processNode(node.childNodes[0]);
+			return {
+				...text,
+				bold: true,
+			};
+		} else {
+			return {
+				text: node.textContent,
+				textStyle: 'b1',
+				bold: true,
+			};
+		}
+	},
 	A: (node) => {
 		const link = {
 			type: 'link',
@@ -129,13 +118,6 @@ const TAGS = {
 			},
 		],
 	}),
-	BR: () => {
-		console.log('BR');
-		return {
-			type: 'paragraph',
-			children: [{ text: ' ', textStyle: 'b1' }],
-		};
-	},
 	I: (node) => ({
 		text: node.textContent,
 		textStyle: 'b1',
@@ -156,34 +138,13 @@ function ensureParagraphTags(htmlString) {
 	if (!htmlString.endsWith('</p>')) {
 		htmlString = htmlString + '</p>';
 	}
-	// htmlString = htmlString.replace(/\r\n\r\n\u00A0\r\n\r\n/g, '\r\n\r\n');
-	// This regex specifically targets newline characters (\n) that occur before a <p> tag or after a </p> tag.
-	// It uses lookahead assertions to match newlines in certain contexts.
-	// htmlString = htmlString.replace(/(\n)(?=<p>)|(\n)(?=<\/p>)/g, '');
-	// Removes all newline characters (\n) from the string.
-	htmlString = htmlString.replace(/\n/g, '');
-	// htmlString = htmlString
-	// 	.replace(/(<br\s*\/?>)+/gi, (match) => {
-	// 		// If we have exactly one <br> or multiple <br> tags in a single match
-	// 		if (match.includes('<br><br>')) {
-	// 			return '\n\n'; // Replace with two new lines for <br><br>
-	// 		} else {
-	// 			return '\n'; // Replace with one new line for a single <br>
-	// 		}
-	// 	})
-	// 	.trim();
 
-	// Replace the <p> tags nested withing <li> but keep their content
+	// remove <p>'s that are nested inside <li>'s but keep the text content
 	htmlString = htmlString.replace(
 		/<li[^>]*>\s*<p>(.*?)<\/p>\s*<\/li>/g,
 		'<li>$1</li>'
 	);
-	htmlString = htmlString.replace(/<b><b>/g, '')
-	// htmlString = htmlString.replace(/<b>/g, '').replace(/<\/b>/g, '');
 	htmlString = htmlString.replace(/<\/?span[^>]*>/gi, '');
-	console.log('htmlString', htmlString)
-
-	// console.log('htmlString', htmlString);
 	return `${htmlString}`;
 }
 
@@ -198,7 +159,7 @@ export const convertHTMLToTextBlocks = (htmlString) => {
 	const newHtmlString = ensureParagraphTags(htmlString);
 
 	const parentBlocks = parseHTMLToParentBlocks(newHtmlString);
-	// console.log('newHtmlString', newHtmlString);
+	// console.log(parentBlocks);
 	const textBlocks = [];
 
 	parentBlocks.forEach((block) => {
@@ -222,18 +183,23 @@ const processNode = (node) => {
 			};
 		}
 	} else if (node.nodeType === 1) {
-		// ELEMENT_NODE
-		const tagName = node.tagName.toUpperCase();
+		// handle empty node
+		if (!node.textContent.trim()) {
+			return null;
+		}
+
+		const tagName = node.tagName.toUpperCase().includes('H') ? 'H' : node.tagName.toUpperCase()
+
 		const tagHandler = TAGS[tagName];
-
 		if (tagHandler) {
-			return tagHandler(node);
+			console.log({tagName})
+			if(tagName === 'H') {
+				return tagHandler(node, node.tagName.toLowerCase());
+			} else  {
+				return tagHandler(node);
+			}
 		}
 
-		// Handle <b> nested within other elements
-		if (tagName === 'B') {
-			return processNode(node.firstChild); // If <b> is empty, process its child
-		}
 		// Handle children recursively if no specific TAGS handler is found
 		const children = Array.from(node.childNodes)
 			.map(processNode)
@@ -249,5 +215,3 @@ const processNode = (node) => {
 
 	return null;
 };
-
-// console.dir(convertHTMLToTextBlocks(jsonData[0].body_html), {depth: null})
